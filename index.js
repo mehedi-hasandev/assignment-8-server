@@ -46,6 +46,20 @@ app.patch('/books/:id', async (req, res) => {
 });
 
 
+app.delete('/books/:id', async (req, res) => {
+  const { id } = req.params;
+  if (!ObjectId.isValid(id)) return res.status(400).send({ message: 'Invalid book ID' });
+  const borrowRecord = await borrowsCollection.findOne({ bookId: id });
+  if (borrowRecord) {
+    return res.status(400).send({
+      message: 'Cannot delete: this book is currently borrowed by a user.',
+    });
+  }
+  const result = await booksCollection.deleteOne({ _id: new ObjectId(id) });
+  if (result.deletedCount === 0) return res.status(404).send({ message: 'Book not found' });
+  res.send({ success: true, message: 'Book deleted successfully' });
+});
+
 app.post('/add-books', async (req, res) => {
   if (!req.body || typeof req.body.userEmail !== 'string' || !req.body.userEmail.trim()) {
     return res.status(400).send({ message: 'A user email is required to add a book.' });
