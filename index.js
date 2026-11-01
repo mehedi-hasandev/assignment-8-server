@@ -81,6 +81,15 @@ app.post("/borrows", async (req, res) => {
   }
 });
 
+app.get("/borrows", async (req, res) => {
+  try {
+    const result = await borrowsCollection.find().toArray();
+    res.send(result);
+  } catch (error) {
+    console.error("Error fetching borrows:", error);
+    res.status(500).send({ message: "Failed to fetch borrows" });
+  }
+});
 
 app.get('/', (req, res) => {
   res.send('Server is running fine!')
