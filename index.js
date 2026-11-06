@@ -7,7 +7,10 @@ import { createRemoteJWKSet, jwtVerify } from 'jose';
 const app = express();
 const PORT = 8000;
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://booknook-frontend-wheat.vercel.app',
+  credentials: true,
+}));
 app.use(express.json());
 
 const client = new MongoClient(process.env.MONGODB_URI);
