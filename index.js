@@ -21,7 +21,7 @@ const unauthorizedMessage = 'Unauthorized access: invalid or missing token';
 const jwtSecret = process.env.JWT_SECRET || process.env.BETTER_AUTH_SECRET;
 const jwks = jwtSecret
   ? null
-  : createRemoteJWKSet(new URL(process.env.AUTH_JWKS_URL || 'http://localhost:3000/api/auth/jwks'));
+  : createRemoteJWKSet(new URL(process.env.AUTH_JWKS_URL || `${process.env.CLIENT_URL}/api/auth/jwks`));
 
 const verifyToken = async (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -175,3 +175,5 @@ app.get('/', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running at ${PORT}`)
 })
+
+export default app;
